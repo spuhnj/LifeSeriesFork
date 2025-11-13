@@ -53,7 +53,7 @@ public class BoogeymanManager {
                 public void trigger() {
                     if (!BOOGEYMAN_ENABLED) return;
                     if (boogeymanChosen) return;
-                    PlayerUtils.broadcastMessage(Component.literal("The Boogeyman is being chosen in 5 minutes.").withStyle(ChatFormatting.RED));
+                    PlayerUtils.broadcastMessage(Component.literal("The Hunter is being chosen in 5 minutes.").withStyle(ChatFormatting.RED));
                     PlayerUtils.playSoundToPlayers(PlayerUtils.getAllPlayers(), SoundEvents.LIGHTNING_BOLT_THUNDER);
                 }
             }
@@ -64,7 +64,7 @@ public class BoogeymanManager {
                 public void trigger() {
                     if (!BOOGEYMAN_ENABLED) return;
                     if (boogeymanChosen) return;
-                    PlayerUtils.broadcastMessage(Component.literal("The Boogeyman is being chosen in 1 minute.").withStyle(ChatFormatting.RED));
+                    PlayerUtils.broadcastMessage(Component.literal("The Hunter is being chosen in 1 minute.").withStyle(ChatFormatting.RED));
                     PlayerUtils.playSoundToPlayers(PlayerUtils.getAllPlayers(), SoundEvents.LIGHTNING_BOLT_THUNDER);
                 }
             }
@@ -130,7 +130,7 @@ public class BoogeymanManager {
     public void addBoogeymanManually(ServerPlayer player) {
         if (!BOOGEYMAN_ENABLED) return;
         Boogeyman newBoogeyman = addBoogeyman(player);
-        player.sendSystemMessage(Component.nullToEmpty("§c [NOTICE] You are now a Boogeyman!"));
+        player.sendSystemMessage(Component.nullToEmpty("§c [NOTICE] You are now a Hunter!"));
         messageBoogeyman(newBoogeyman, player);
     }
 
@@ -140,7 +140,7 @@ public class BoogeymanManager {
         if (boogeyman == null) return;
         boogeymen.remove(boogeyman);
         if (boogeymen.isEmpty()) boogeymanChosen = false;
-        player.sendSystemMessage(Component.nullToEmpty("§c [NOTICE] You are no longer a Boogeyman!"));
+        player.sendSystemMessage(Component.nullToEmpty("§c [NOTICE] You are no longer a Hunter!"));
     }
 
     public void resetBoogeymen() {
@@ -148,7 +148,7 @@ public class BoogeymanManager {
         for (Boogeyman boogeyman : boogeymen) {
             ServerPlayer player = PlayerUtils.getPlayer(boogeyman.uuid);
             if (player == null) continue;
-            player.sendSystemMessage(Component.nullToEmpty("§c [NOTICE] You are no longer a Boogeyman!"));
+            player.sendSystemMessage(Component.nullToEmpty("§c [NOTICE] You are no longer a Hunter!"));
         }
         boogeymen = new ArrayList<>();
         boogeymanChosen = false;
@@ -175,7 +175,7 @@ public class BoogeymanManager {
         boogeyman.failed = false;
         if (boogeyman.cured) return;
         boogeyman.cured = true;
-        PlayerUtils.sendTitle(player,Component.nullToEmpty("§aYou are cured!"), 20, 30, 20);
+        PlayerUtils.sendTitle(player,Component.nullToEmpty("§aThe Huntsman is pleased."), 20, 30, 20);
         PlayerUtils.playSoundToPlayer(player, SoundEvent.createVariableRangeEvent(IdentifierHelper.vanilla("lastlife_boogeyman_cure")));
 
         boolean stealLife = BOOGEYMAN_STEAL_LIFE && livesManager.canChangeLivesNaturally();
@@ -185,7 +185,7 @@ public class BoogeymanManager {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 is cured of the Boogeyman curse and gained a life for succeeding!", player));
             }
             else {
-                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 is cured of the Boogeyman curse!", player));
+                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 has killed their target and is no longer a Hunter!", player));
             }
         }
         if (stealLife) {
@@ -225,7 +225,7 @@ public class BoogeymanManager {
 
     public void prepareToChooseBoogeymen() {
         if (!BOOGEYMAN_ENABLED) return;
-        PlayerUtils.broadcastMessage(Component.literal("The Boogeyman is about to be chosen.").withStyle(ChatFormatting.RED));
+        PlayerUtils.broadcastMessage(Component.literal("The Hunter is about to be chosen.").withStyle(ChatFormatting.RED));
         PlayerUtils.playSoundToPlayers(PlayerUtils.getAllPlayers(), SoundEvents.LIGHTNING_BOLT_THUNDER);
         TaskScheduler.scheduleTask(100, () -> {
             resetBoogeymen();
@@ -355,8 +355,8 @@ public class BoogeymanManager {
     public void handleBoogeymanLists(List<ServerPlayer> normalPlayers, List<ServerPlayer> boogeyPlayers) {
         PlayerUtils.playSoundToPlayers(normalPlayers, SoundEvent.createVariableRangeEvent(IdentifierHelper.vanilla("lastlife_boogeyman_no")));
         PlayerUtils.playSoundToPlayers(boogeyPlayers, SoundEvent.createVariableRangeEvent(IdentifierHelper.vanilla("lastlife_boogeyman_yes")));
-        PlayerUtils.sendTitleToPlayers(normalPlayers, Component.literal("NOT the Boogeyman.").withStyle(ChatFormatting.GREEN),10,50,20);
-        PlayerUtils.sendTitleToPlayers(boogeyPlayers, Component.literal("The Boogeyman.").withStyle(ChatFormatting.RED),10,50,20);
+        PlayerUtils.sendTitleToPlayers(normalPlayers, Component.literal("NOT the Hunter.").withStyle(ChatFormatting.GREEN),10,50,20);
+        PlayerUtils.sendTitleToPlayers(boogeyPlayers, Component.literal("The Hunter.").withStyle(ChatFormatting.RED),10,50,20);
         for (ServerPlayer boogey : boogeyPlayers) {
             Boogeyman boogeyman = addBoogeyman(boogey);
             messageBoogeyman(boogeyman, boogey);
@@ -381,7 +381,7 @@ public class BoogeymanManager {
                 ServerPlayer player = PlayerUtils.getPlayer(boogeyman.uuid);
                 if (player == null) {
                     if (BOOGEYMAN_ANNOUNCE_OUTCOME) {
-                        PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been dropped to their §cLast Life§7.", boogeyman.name));
+                        PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §Hunter§7. They have §clost a life§7.", boogeyman.name));
                     }
                     ScoreboardUtils.setScore(ScoreHolder.forNameOnly(boogeyman.name), LivesManager.SCOREBOARD_NAME, 1);
                     continue;
@@ -409,7 +409,7 @@ public class BoogeymanManager {
         if (BOOGEYMAN_ADVANCED_DEATHS) {
             PlayerUtils.sendTitle(player,Component.nullToEmpty("§cThe curse consumes you.."), 20, 30, 20);
             if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
-                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been consumed by the curse.", player));
+                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §Hunter§7. They have angered the §Huntsman§6...", player));
             }
             if (canChangeLives) {
                 AdvancedDeathsManager.setPlayerLives(player, 1);
@@ -419,7 +419,7 @@ public class BoogeymanManager {
             PlayerUtils.sendTitle(player,Component.nullToEmpty("§cYou have failed."), 20, 30, 20);
             PlayerUtils.playSoundToPlayer(player, SoundEvent.createVariableRangeEvent(IdentifierHelper.vanilla("lastlife_boogeyman_fail")));
             if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
-                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been dropped to their §cLast Life§7.", player));
+                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §Hunter§7. They have angered the §Huntsman§6...", player));
             }
             if (canChangeLives) {
                 player.ls$setLives(1);
@@ -443,7 +443,7 @@ public class BoogeymanManager {
         if (boogeymen.size() >= BOOGEYMAN_AMOUNT_MAX) return;
         if (currentSession.statusNotStarted() || currentSession.statusFinished()) return;
         TaskScheduler.scheduleTask(40, () -> {
-            player.sendSystemMessage(Component.nullToEmpty("§cSince you were not present when the Boogeyman was being chosen, your chance to become the Boogeyman is now. Good luck!"));
+            player.sendSystemMessage(Component.nullToEmpty("§cSince you were not present when the Hunter was being chosen, your chance to become the Hunter is now. Good luck!"));
             chooseBoogeymen(new ArrayList<>(List.of(player)), BoogeymanRollType.LATE_JOIN);
         });
     }
@@ -544,7 +544,7 @@ public class BoogeymanManager {
                 ServerPlayer player = boogeyman.getPlayer();
                 if (player != null) {
                     warningAutoFail.add(boogeyman.uuid);
-                    player.sendSystemMessage(Component.nullToEmpty("§cYou only have 5 minutes left to kill someone as the Boogeyman before you fail!"));
+                    player.sendSystemMessage(Component.nullToEmpty("§cYou only have 5 minutes left to kill someone as the Hunter before you fail!"));
                 }
             }
         }
