@@ -55,13 +55,13 @@ public class SecretLife extends Season {
     SessionAction taskWarningAction = new SessionAction(OtherUtils.minutesToTicks(-5)+1) {
         @Override
         public void trigger() {
-            PlayerUtils.broadcastMessage(Component.literal("Go submit / fail your secret tasks if you haven't!").withStyle(ChatFormatting.GRAY));
+            PlayerUtils.broadcastMessage(Component.literal("Go submit your blocks if you haven't!").withStyle(ChatFormatting.GRAY));
         }
     };
     SessionAction taskWarningAction2 = new SessionAction(OtherUtils.minutesToTicks(-30)+1) {
         @Override
         public void trigger() {
-            PlayerUtils.broadcastMessage(Component.literal("You better start finishing your secret tasks if you haven't already!").withStyle(ChatFormatting.GRAY));
+            PlayerUtils.broadcastMessage(Component.literal("You better start finding your blocks if you haven't already!").withStyle(ChatFormatting.GRAY));
         }
     };
 
@@ -319,7 +319,7 @@ public class SecretLife extends Season {
         if (!playersWithTaskBooks.isEmpty()) {
             boolean isOne = playersWithTaskBooks.size() == 1;
             String playerNames = String.join(", ", playersWithTaskBooks);
-            PlayerUtils.broadcastMessageToAdmins(TextUtils.formatLoosely("§4{}§c still {} not submitted / failed a task this session.", playerNames, (isOne?"has":"have")));
+            PlayerUtils.broadcastMessageToAdmins(TextUtils.formatLoosely("§4{}§c still {} not submitted their blocks this session.", playerNames, (isOne?"has":"have")));
         }
     }
 
