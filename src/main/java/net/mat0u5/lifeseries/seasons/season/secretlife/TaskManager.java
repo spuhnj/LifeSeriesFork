@@ -162,8 +162,8 @@ public class TaskManager {
         ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
         List<Filterable<Component>> lines = task.getBookLines(player);
         WrittenBookContent bookContent = new WrittenBookContent(
-            Filterable.passThrough(TextUtils.formatString("§c{}'s Secret Task", player)),
-                "Secret Keeper",
+            Filterable.passThrough(TextUtils.formatString("§c{}'s Targets", player)),
+                "Hunstman",
                 0,
                 lines,
                 true
@@ -223,7 +223,7 @@ public class TaskManager {
                 tasksChosenFor.add(player.getUUID());
             }
         }
-        PlayerUtils.sendTitleToPlayers(allowedPlayers, Component.literal("Your secret is...").withStyle(ChatFormatting.RED),20,35,0);
+        PlayerUtils.sendTitleToPlayers(allowedPlayers, Component.literal("Your targets are...").withStyle(ChatFormatting.RED),20,35,0);
 
         TaskScheduler.scheduleTask(40, () -> {
             PlayerUtils.playSoundToPlayers(allowedPlayers, SoundEvents.UI_BUTTON_CLICK.value());
@@ -367,7 +367,7 @@ public class TaskManager {
 
     public static boolean isBeingUsed(ServerPlayer player) {
         if (!secretKeeperBeingUsed) return false;
-        player.sendSystemMessage(Component.nullToEmpty("§cSomeone else is using the Secret Keeper right now."));
+        player.sendSystemMessage(Component.nullToEmpty("§cSomeone else is submitting their targets right now."));
         return true;
     }
 
@@ -375,7 +375,7 @@ public class TaskManager {
         TaskTypes type = getPlayersTaskType(player);
         if (type != null) return true;
         if (sendMessage) {
-            player.sendSystemMessage(Component.nullToEmpty("§cYou do not have a secret task book in your inventory."));
+            player.sendSystemMessage(Component.nullToEmpty("§cYou do not have a targets book in your inventory."));
         }
         return false;
     }
@@ -401,7 +401,7 @@ public class TaskManager {
             rawTask = task.rawTask;
         }
 
-        return TextUtils.format("§7Click {}§7 to see what {}§7's task was.", TextUtils.selfMessageText(rawTask), player);
+        return TextUtils.format("§7Click {}§7 to see what {}§7's targets were.", TextUtils.selfMessageText(rawTask), player);
     }
 
     public static void succeedTask(ServerPlayer player, boolean fromCommand) {
@@ -426,7 +426,7 @@ public class TaskManager {
         }
         pendingConfirmationTasks.remove(player.getUUID());
         if (BROADCAST_SECRET_KEEPER) {
-            PlayerUtils.broadcastMessage(TextUtils.format("{}§a succeeded their task.", player));
+            PlayerUtils.broadcastMessage(TextUtils.format("{}§a succeeded in finding their targets.", player));
         }
         if (PUBLIC_TASKS_ON_SUBMIT) {
             PlayerUtils.broadcastMessage(getShowTaskMessage(player));
@@ -473,7 +473,7 @@ public class TaskManager {
         if (type == TaskTypes.EASY) {
             removePlayersTaskBook(player);
             if (BROADCAST_SECRET_KEEPER) {
-                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 re-rolled their easy task.", player));
+                PlayerUtils.broadcastMessage(TextUtils.format("{}§7 re-rolled their easy targets.", player));
             }
             if (PUBLIC_TASKS_ON_SUBMIT) {
                 PlayerUtils.broadcastMessage(getShowTaskMessage(player));
@@ -511,10 +511,10 @@ public class TaskManager {
         }
         if (type == TaskTypes.HARD) {
             if (!player.ls$isOnLastLife(true)) {
-                player.sendSystemMessage(Component.nullToEmpty("§cYou cannot re-roll a Hard task."));
+                player.sendSystemMessage(Component.nullToEmpty("§cYou cannot re-roll Hard targets."));
             }
             else {
-                player.sendSystemMessage(Component.nullToEmpty("§cYou cannot re-roll a Hard task. If you want your red task instead, click the Fail button."));
+                player.sendSystemMessage(Component.nullToEmpty("§cYou cannot re-roll  Hard targets. If you want your red targets instead, click the Fail button."));
             }
         }
     }
@@ -529,7 +529,7 @@ public class TaskManager {
         TaskTypes type = getPlayersTaskType(player);
         if (!hasTaskBookCheck(player, !fromCommand)) return;
         if (BROADCAST_SECRET_KEEPER) {
-            PlayerUtils.broadcastMessage(TextUtils.format("{}§c failed their task.", player));
+            PlayerUtils.broadcastMessage(TextUtils.format("{}§c failed to find their targets.", player));
         }
         if (PUBLIC_TASKS_ON_SUBMIT) {
             PlayerUtils.broadcastMessage(getShowTaskMessage(player));
