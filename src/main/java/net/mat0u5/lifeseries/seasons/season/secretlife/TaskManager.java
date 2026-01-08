@@ -242,7 +242,7 @@ public class TaskManager {
                 tasksChosenFor.add(player.getUUID());
             }
         }
-        PlayerUtils.sendTitleToPlayers(allowedPlayers, Component.literal("Your secret is...").withStyle(ChatFormatting.RED),20,35,0);
+        PlayerUtils.sendTitleToPlayers(allowedPlayers, Component.literal("Your targets are...").withStyle(ChatFormatting.RED),20,35,0);
 
         TaskScheduler.scheduleTask(40, () -> {
             PlayerUtils.playSoundToPlayers(allowedPlayers, SoundEvents.UI_BUTTON_CLICK.value());
